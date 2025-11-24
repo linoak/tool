@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SOS PWA Tool</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="manifest" href="manifest.json">
+    <style>
+        .location-card {
+            margin-bottom: 2rem;
+        }
+        .control-button {
+            height: 120px;
+            width: 100%;
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            transition: all 0.3s ease;
+        }
+        .is-active-custom {
+            box-shadow: 0 0 15px rgba(0, 209, 178, 0.6);
+            transform: scale(1.02);
+        }
+        .sos-active {
+            animation: sos-pulse 1s infinite;
+            background-color: #ff3860 !important;
+            color: white !important;
+        }
+        @keyframes sos-pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.6; }
+            100% { opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+    <section class="hero is-primary">
+        <div class="hero-body">
+            <div class="container has-text-centered">
+                <h1 class="title">
+                    <i class="fas fa-shield-alt"></i> SOS PWA Tool
+                </h1>
+                <p class="subtitle">
+                    定位 • 手電筒 • 求救訊號
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <section class="section">
+        <div class="container">
+            <!-- Location Section -->
+            <div class="card location-card">
+                <div class="card-content">
+                    <div class="content has-text-centered">
+                        <h2 class="title is-4"><i class="fas fa-map-marker-alt"></i> 目前位置</h2>
+                        <div class="columns is-mobile">
+                            <div class="column">
+                                <p class="heading">緯度 (Latitude)</p>
+                                <p class="title is-5" id="latitude">--</p>
+                            </div>
+                            <div class="column">
+                                <p class="heading">經度 (Longitude)</p>
+                                <p class="title is-5" id="longitude">--</p>
+                            </div>
+                        </div>
+                        <p class="help is-danger" id="location-error"></p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Controls Section -->
+            <div class="columns is-multiline">
+                <div class="column is-6">
+                    <button class="button is-info is-large is-fullwidth control-button" id="flashlight-btn">
+                        <span class="icon is-medium">
+                            <i class="fas fa-lightbulb"></i>
+                        </span>
+                        <span>手電筒</span>
+                    </button>
+                </div>
+                <div class="column is-6">
+                    <button class="button is-danger is-outlined is-large is-fullwidth control-button" id="sos-btn">
+                        <span class="icon is-medium">
+                            <i class="fas fa-exclamation-triangle"></i>
+                        </span>
+                        <span>SOS 訊號</span>
+                    </button>
+                </div>
+            </div>
+            
+            <div class="notification is-warning is-light is-hidden" id="permission-warning">
+                <button class="delete"></button>
+                請允許相機權限以使用手電筒功能。
+            </div>
+
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="content has-text-centered">
+            <p>
+                <strong>SOS PWA Tool</strong> by Antigravity.
+            </p>
+        </div>
+    </footer>
+
+    <script src="app.js"></script>
+</body>
+</html>
