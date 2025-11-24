@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#ff3860">
+    <meta name="description" content="SOS 緊急求救應用程式 - 定位、手電筒、SOS 信號">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>SOS 緊急求救</title>
+
+    <!-- Bulma CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="style.css">
+
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="manifest.json">
+    <link rel="icon" type="image/png" href="icon-192.png">
+    <link rel="apple-touch-icon" href="icon-192.png">
+</head>
+
+<body>
+    <section class="hero is-danger is-small">
+        <div class="hero-body">
+            <div class="container has-text-centered">
+                <h1 class="title">
+                    <i class="fas fa-exclamation-triangle"></i> SOS 緊急求救
+                </h1>
+                <p class="subtitle">定位 · 手電筒 · 求救信號</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="section">
+        <div class="container">
+            <!-- 重要提示卡片 -->
+            <div class="card mb-5" style="border-left: 4px solid #ff3860;">
+                <div class="card-content">
+                    <div class="content">
+                        <p class="has-text-weight-bold">
+                            <i class="fas fa-info-circle has-text-info"></i> 使用前必讀
+                        </p>
+                        <ul class="is-size-7">
+                            <li><strong>位置權限：</strong>請允許瀏覽器存取您的位置</li>
+                            <li><strong>相機權限：</strong>手電筒功能需要相機權限</li>
+                            <li><strong>HTTPS：</strong>手電筒在某些瀏覽器需要 HTTPS 連線</li>
+                            <li><strong>支援瀏覽器：</strong>建議使用 Chrome 或 Edge (Android)</li>
+                        </ul>
+                        <p class="is-size-7 has-text-grey">
+                            <i class="fas fa-mobile-alt"></i> 請開啟瀏覽器的開發者工具查看詳細日誌
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 地理定位卡片 -->
+            <div class="card mb-5">
+                <header class="card-header">
+                    <p class="card-header-title">
+                        <i class="fas fa-map-marker-alt mr-2"></i> 我的位置
+                    </p>
+                </header>
+                <div class="card-content">
+                    <div class="content">
+                        <div id="location-info">
+                            <p class="has-text-centered has-text-grey">
+                                <i class="fas fa-spinner fa-pulse"></i> 正在獲取位置...
+                            </p>
+                        </div>
+                        <div id="location-data" style="display: none;">
+                            <div class="columns is-mobile">
+                                <div class="column">
+                                    <p class="heading">緯度</p>
+                                    <p class="title is-5" id="latitude">--</p>
+                                </div>
+                                <div class="column">
+                                    <p class="heading">經度</p>
+                                    <p class="title is-5" id="longitude">--</p>
+                                </div>
+                            </div>
+                            <div class="has-text-centered mt-3">
+                                <p class="is-size-7 has-text-grey">
+                                    <i class="fas fa-clock"></i>
+                                    <span id="location-time">--</span>
+                                </p>
+                            </div>
+                        </div>
+                        <div id="location-error" style="display: none;">
+                            <article class="message is-warning">
+                                <div class="message-body">
+                                    <i class="fas fa-exclamation-circle"></i>
+                                    <span id="error-message">無法獲取位置</span>
+                                </div>
+                            </article>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 手電筒控制卡片 -->
+            <div class="card mb-5">
+                <header class="card-header">
+                    <p class="card-header-title">
+                        <i class="fas fa-lightbulb mr-2"></i> 手電筒
+                    </p>
+                </header>
+                <div class="card-content">
+                    <div class="content has-text-centered">
+                        <button id="flashlight-btn" class="button is-large is-warning is-fullwidth">
+                            <span class="icon is-large">
+                                <i class="fas fa-lightbulb fa-2x"></i>
+                            </span>
+                            <span class="ml-3">開啟手電筒</span>
+                        </button>
+                        <p class="help mt-3" id="flashlight-status">點擊按鈕開啟或關閉手電筒</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SOS 信號卡片 -->
+            <div class="card mb-5">
+                <header class="card-header">
+                    <p class="card-header-title">
+                        <i class="fas fa-broadcast-tower mr-2"></i> SOS 求救信號
+                    </p>
+                </header>
+                <div class="card-content">
+                    <div class="content has-text-centered">
+                        <button id="sos-btn" class="button is-large is-danger is-fullwidth sos-button">
+                            <span class="icon is-large">
+                                <i class="fas fa-life-ring fa-2x"></i>
+                            </span>
+                            <span class="ml-3">啟動 SOS 信號</span>
+                        </button>
+                        <p class="help mt-3">
+                            <i class="fas fa-info-circle"></i>
+                            SOS 摩斯密碼：··· ─── ···
+                        </p>
+                        <p class="help" id="sos-status">點擊按鈕啟動或停止 SOS 信號</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 說明卡片 -->
+            <div class="card">
+                <header class="card-header">
+                    <p class="card-header-title">
+                        <i class="fas fa-question-circle mr-2"></i> 疑難排解
+                    </p>
+                </header>
+                <div class="card-content">
+                    <div class="content">
+                        <p class="has-text-weight-bold">手電筒無法使用？</p>
+                        <ol class="is-size-7">
+                            <li>確認已允許相機權限（瀏覽器會彈出提示）</li>
+                            <li>確認沒有其他應用程式正在使用相機</li>
+                            <li>嘗試重新整理頁面</li>
+                            <li>使用 Chrome 或 Edge 瀏覽器（Android）</li>
+                            <li>確認使用 HTTPS 連線或本地伺服器</li>
+                        </ol>
+
+                        <p class="has-text-weight-bold mt-4">位置無法獲取？</p>
+                        <ol class="is-size-7">
+                            <li>確認已允許位置權限</li>
+                            <li>確認手機 GPS 已開啟</li>
+                            <li>嘗試在戶外或窗邊使用</li>
+                        </ol>
+
+                        <article class="message is-info is-small mt-4">
+                            <div class="message-body">
+                                <i class="fas fa-shield-alt"></i>
+                                此應用程式需要位置和相機權限才能正常運作。所有資料僅在您的裝置上處理，不會上傳到伺服器。
+                            </div>
+                        </article>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="content has-text-centered">
+            <p>
+                <strong>SOS 緊急求救</strong> - PWA 應用程式
+            </p>
+            <p class="is-size-7 has-text-grey">
+                <i class="fas fa-mobile-alt"></i> 支援離線使用 |
+                <i class="fas fa-code"></i> 開啟開發者工具查看日誌
+            </p>
+        </div>
+    </footer>
+
+    <script src="app.js"></script>
+</body>
+
+</html>

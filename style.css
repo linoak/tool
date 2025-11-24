@@ -1,0 +1,173 @@
+/* 自訂樣式 */
+:root {
+    --primary-color: #ff3860;
+    --warning-color: #ffdd57;
+    --dark-bg: #1a1a2e;
+    --card-bg: #ffffff;
+}
+
+body {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 100vh;
+}
+
+.hero {
+    background: linear-gradient(135deg, #ff3860 0%, #ff6b9d 100%);
+}
+
+.card {
+    border-radius: 12px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
+}
+
+.card-header {
+    background: linear-gradient(135deg, #f5f5f5 0%, #e8e8e8 100%);
+    border-radius: 12px 12px 0 0;
+}
+
+.card-header-title {
+    color: #363636;
+    font-weight: 600;
+}
+
+/* 按鈕樣式 */
+.button {
+    border-radius: 8px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    border: none;
+}
+
+.button:hover {
+    transform: scale(1.02);
+}
+
+.button:active {
+    transform: scale(0.98);
+}
+
+#flashlight-btn {
+    background: linear-gradient(135deg, #ffdd57 0%, #ffa500 100%);
+    color: #363636;
+}
+
+#flashlight-btn:hover {
+    background: linear-gradient(135deg, #ffa500 0%, #ff8c00 100%);
+}
+
+#flashlight-btn.is-active {
+    background: linear-gradient(135deg, #48c774 0%, #3ec46d 100%);
+    color: white;
+}
+
+.sos-button {
+    background: linear-gradient(135deg, #ff3860 0%, #ff1744 100%);
+    animation: pulse-border 2s infinite;
+}
+
+.sos-button:hover {
+    background: linear-gradient(135deg, #ff1744 0%, #d50000 100%);
+}
+
+.sos-button.is-active {
+    background: linear-gradient(135deg, #ffdd57 0%, #ffa500 100%);
+    color: #363636;
+    animation: sos-active 1s infinite;
+}
+
+@keyframes pulse-border {
+    0%, 100% {
+        box-shadow: 0 0 0 0 rgba(255, 56, 96, 0.7);
+    }
+    50% {
+        box-shadow: 0 0 0 10px rgba(255, 56, 96, 0);
+    }
+}
+
+@keyframes sos-active {
+    0%, 100% {
+        box-shadow: 0 0 20px rgba(255, 221, 87, 0.8);
+    }
+    50% {
+        box-shadow: 0 0 40px rgba(255, 221, 87, 1);
+    }
+}
+
+/* 位置資訊樣式 */
+#location-data .title {
+    color: #3273dc;
+    font-family: 'Courier New', monospace;
+}
+
+.heading {
+    color: #7a7a7a;
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 0.75rem;
+}
+
+/* Footer 樣式 */
+.footer {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    margin-top: 2rem;
+}
+
+/* 響應式調整 */
+@media screen and (max-width: 768px) {
+    .hero-body {
+        padding: 1.5rem;
+    }
+    
+    .section {
+        padding: 1.5rem 0.75rem;
+    }
+    
+    .card {
+        margin-bottom: 1rem !important;
+    }
+    
+    .button.is-large {
+        font-size: 1rem;
+    }
+}
+
+/* 訊息樣式 */
+.message {
+    border-radius: 8px;
+}
+
+.message-body {
+    border-radius: 8px;
+}
+
+/* 圖示動畫 */
+.fa-pulse {
+    animation: fa-spin 1s infinite steps(8);
+}
+
+/* 輔助文字 */
+.help {
+    color: #7a7a7a;
+    font-size: 0.875rem;
+}
+
+/* 卡片內容間距 */
+.card-content .content {
+    padding: 0.5rem;
+}
+
+/* 標題樣式 */
+.hero .title {
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.hero .subtitle {
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+}
