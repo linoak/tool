@@ -20,7 +20,6 @@ let track = null;
 let isFlashlightOn = false;
 let isSosActive = false;
 let sosInterval = null;
-let sosStep = 0;
 
 // Initialize Geolocation
 function initGeolocation() {
@@ -69,40 +68,54 @@ async function initFlashlight() {
 
 // Toggle Flashlight
 async function toggleFlashlight(forceState = null) {
-    if (!track) {
+    const desiredState = forceState !== null ? forceState : !isFlashlightOn;
+
+    // If turning ON, ensure we have a track
+    if (desiredState && !track) {
         const success = await initFlashlight();
         if (!success) return;
     }
 
-    const newState = forceState !== null ? forceState : !isFlashlightOn;
+    // If turning OFF and no track, just ensure state is correct
+    if (!desiredState && !track) {
+        isFlashlightOn = false;
+        updateFlashlightUI();
+        return;
+    }
 
     try {
         await track.applyConstraints({
-            advanced: [{ torch: newState }]
+            advanced: [{ torch: desiredState }]
         });
-        isFlashlightOn = newState;
+        isFlashlightOn = desiredState;
 
-        // UI Update
-        if (isFlashlightOn) {
-            flashlightBtn.classList.add('is-active-custom', 'is-warning');
-            flashlightBtn.classList.remove('is-info');
-        } else {
-            flashlightBtn.classList.remove('is-active-custom', 'is-warning');
-            flashlightBtn.classList.add('is-info');
+        // Release resources if turning off and not in SOS mode
+        if (!desiredState && !isSosActive) {
+            track.stop();
+            track = null;
         }
+
+        updateFlashlightUI();
     } catch (err) {
         console.error('Error toggling flashlight:', err);
+        // If error occurs (e.g. track ended), reset state
+        isFlashlightOn = false;
+        track = null;
+        updateFlashlightUI();
+    }
+}
+
+function updateFlashlightUI() {
+    if (isFlashlightOn) {
+        flashlightBtn.classList.add('is-active-custom', 'is-warning');
+        flashlightBtn.classList.remove('is-info');
+    } else {
+        flashlightBtn.classList.remove('is-active-custom', 'is-warning');
+        flashlightBtn.classList.add('is-info');
     }
 }
 
 // SOS Logic
-// SOS Pattern: ... --- ... (Dot=Short, Dash=Long)
-// Timing: Dot=1 unit, Dash=3 units, Intra-char gap=1 unit, Inter-char gap=3 units, Word gap=7 units
-// Simplified for visual SOS: 
-// S (...) : ON(200)-OFF(200)-ON(200)-OFF(200)-ON(200)-OFF(600)
-// O (---) : ON(600)-OFF(200)-ON(600)-OFF(200)-ON(600)-OFF(600)
-// S (...) : ON(200)-OFF(200)-ON(200)-OFF(200)-ON(200)-OFF(1400)
-
 const SOS_PATTERN = [
     // S
     200, 200, 200, 200, 200, 600,
